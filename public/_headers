@@ -1,0 +1,7 @@
+/*
+  Content-Security-Policy: frame-ancestors 'self' *.storyblok.com;
+  Feature-Policy: fullscreen 'self';
+  Referrer-Policy: no-referrer
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
