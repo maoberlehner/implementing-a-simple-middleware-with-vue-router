@@ -62,23 +62,27 @@ function nextFactory(context, middleware, index) {
 }
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.middleware) {
-    const middleware = Array.isArray(to.meta.middleware)
-      ? to.meta.middleware
-      : [to.meta.middleware];
+    const middleware = [];
 
-    const context = {
-      from,
-      next,
-      router,
-      to,
-    };
-    const nextMiddleware = nextFactory(context, middleware, 1);
+    // Retrieve all middleware from the router match tree
+    to.matched.forEach((match) => {
+        if (match.meta.middleware) {
+            middleware.push(...match.meta.middleware);
+        }
+    });
 
-    return middleware[0]({ ...context, next: nextMiddleware });
-  }
+    if (middleware.length > 0) {
+        const context = {
+            from,
+            next,
+            router,
+            to,
+        };
+        const nextMiddleware = nextFactory(context, middleware, 1);
 
-  return next();
+        return middleware[0]({...context, next: nextMiddleware});
+    }
+
+    return next();
 });
-
 export default router;
